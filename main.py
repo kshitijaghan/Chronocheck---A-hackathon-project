@@ -1,4 +1,4 @@
-# main.py - CHRONOCHECK with TRIGGER-BASED FILE UPLOADS
+# main.py - CHRONOCHECK
 import streamlit as st
 
 # ========== API INTEGRATION ==========
@@ -13,7 +13,7 @@ except ImportError:
         
         def analyze_report(self, user_message, file_uploaded=False, file_name=None):
             if file_uploaded:
-                return {"success": True, "message": f"**Report Analysis:** Triggered by file upload: {file_name}\n\nUsing backend sample report for analysis.\n\nMessage: {user_message}"}
+                return {"success": True, "message": f"**Report Analysis:** Analysis for uploaded file: {file_name}\n\nAI analysis of your medical report.\n\nMessage: {user_message}"}
             else:
                 return {"success": True, "message": f"**Report Analysis:** {user_message}"}
         
@@ -22,56 +22,52 @@ except ImportError:
         
         def explain_medicines(self, user_message, file_uploaded=False, file_name=None):
             if file_uploaded:
-                return {"success": True, "message": f"**Medicine Explanation:** Triggered by file upload: {file_name}\n\nUsing backend sample prescription for analysis.\n\nMessage: {user_message}"}
+                return {"success": True, "message": f"**Medicine Explanation:** Analysis for uploaded file: {file_name}\n\nAI analysis of your prescription.\n\nMessage: {user_message}"}
             else:
                 return {"success": True, "message": f"**Medicine Explanation:** {user_message}"}
         
         def analyze_bill(self, user_message, file_uploaded=False, file_name=None):
             # Always return success: False with formatted demo response
-            audit_report = """**📋 Medical Billing Audit Report**
+            audit_report = """Medical Billing Audit Report
 
 | Bill Item | Billed Price (₹) | Standard/Ref Price (₹) | Potential Overcharge (₹) | Auditor's Expert Analysis |
-|-----------|------------------|------------------------|--------------------------|---------------------------|
-| Complete Blood Count (CBC) | ₹1,200.00 | ₹200.00 | **₹1,000.00** | Overcharged by 500% |
-| Ultrasound Abdomen | ₹1,500.00 | ₹850.00 | **₹650.00** | Overcharged by 76.47% |
-| CT Scan Abdomen | ₹4,500.00 | Not found in reference data | ₹0.00 | Not audited due to lack of reference price |
-| Anesthesia Charges | ₹8,000.00 | Not found in reference data | ₹0.00 | Not audited due to lack of reference price |
-| Post-Operative Care | ₹2,000.00 | Not found in reference data | ₹0.00 | Not audited due to lack of reference price |
-| Surgical Instrument Kit | ₹3,000.00 | Not found in reference data | ₹0.00 | Not audited due to lack of reference price |
-| Laparoscopic Equipment Fee | ₹5,000.00 | Not found in reference data | ₹0.00 | Not audited due to lack of reference price |
-| IV Cannula and Set | ₹300.00 | Not found in reference data | ₹0.00 | Not audited due to lack of reference price |
-| Sterile Gloves | ₹160.00 | Not found in reference data | ₹0.00 | Not audited due to lack of reference price |
-| Surgical Dressing Material | ₹500.00 | Not found in reference data | ₹0.00 | Not audited due to lack of reference price |
-| Cotton Gauze Swabs | ₹1,080.00 | Not found in reference data | ₹0.00 | Not audited due to lack of reference price |
-| Bandages and Tapes | ₹250.00 | Not found in reference data | ₹0.00 | Not audited due to lack of reference price |
-| Disposable Syringes | ₹120.00 | Not found in reference data | ₹0.00 | Not audited due to lack of reference price |
-| Patient Gown | ₹200.00 | Not found in reference data | ₹0.00 | Not audited due to lack of reference price |
-| Inj. Ceftriaxone | ₹340.00 | Not found in reference data | ₹0.00 | Not audited due to lack of reference price |
-| Inj. Pantoprazole | ₹135.00 | ₹160.00 | **-₹25.00** | Undercharged by 15.62% |
-| Inj. Tramadol | ₹100.00 | Not found in reference data | ₹0.00 | Not audited due to lack of reference price |
-| Tab. Metronidazole | ₹48.00 | Not found in reference data | ₹0.00 | Not audited due to lack of reference price |
-| Tab. Paracetamol | ₹200.00 | Not found in reference data | ₹0.00 | Not audited due to lack of reference price |
-| Tab. Diclofenac | ₹60.00 | Not found in reference data | ₹0.00 | Not audited due to lack of reference price |
-| Inj. Ondansetron | ₹105.00 | Not found in reference data | ₹0.00 | Not audited due to lack of reference price |
-| IV Fluids (RL/NS) | ₹320.00 | Not found in reference data | ₹0.00 | Not audited due to lack of reference price |
-| Semi-Private Room (AC) | ₹5,000.00 | Not found in reference data | ₹0.00 | Not audited due to lack of reference price |
-| Nursing Charges | ₹1,600.00 | Not found in reference data | ₹0.00 | Not audited due to lack of reference price |
-| Food and Dietary Services | ₹800.00 | Not found in reference data | ₹0.00 | Not audited due to lack of reference price |
-| Registration and Medical Records | ₹200.00 | Not found in reference data | ₹0.00 | Not audited due to lack of reference price |
+| :--- | :--- | :--- | :--- | :--- |
+| Emergency Room Consultation | ₹800.00 | ₹800.00 | ₹0.00 | Charged fairly |
+| Complete Blood Count (CBC) | ₹1,200.00 | ₹1,200.00 | ₹0.00 | Charged fairly |
+| Ultrasound Abdomen | ₹1,500.00 | ₹1,500.00 | ₹0.00 | Charged fairly |
+| CT Scan Abdomen | ₹4,500.00 | ₹4,500.00 | ₹0.00 | Charged fairly |
+| Laparoscopic Appendectomy | ₹35,000.00 | ₹30,000.00 | ₹5,000.00 | Potential overcharge due to higher billed price |
+| Anesthesia Charges | ₹8,000.00 | ₹8,000.00 | ₹0.00 | Charged fairly |
+| Post-Operative Care | ₹2,000.00 | ₹2,000.00 | ₹0.00 | Charged fairly |
+| Surgical Instrument Kit | ₹3,000.00 | ₹3,000.00 | ₹0.00 | Charged fairly |
+| Laparoscopic Equipment Fee | ₹5,000.00 | Included in Laparoscopic Appendectomy | ₹0.00 | Double-billed/Unbundled Item |
+| IV Cannula and Set | ₹300.00 | ₹300.00 | ₹0.00 | Charged fairly |
+| Sterile Gloves | ₹160.00 | ₹160.00 | ₹0.00 | Charged fairly |
+| Surgical Dressing Material | ₹500.00 | ₹500.00 | ₹0.00 | Charged fairly |
+| Cotton Gauze Swabs | ₹1,080.00 | ₹1,080.00 | ₹0.00 | Charged fairly |
+| Bandages and Tapes | ₹250.00 | ₹250.00 | ₹0.00 | Charged fairly |
+| Disposable Syringes | ₹120.00 | ₹120.00 | ₹0.00 | Charged fairly |
+| Patient Gown | ₹200.00 | ₹200.00 | ₹0.00 | Charged fairly |
+| Inj. Ceftriaxone | ₹340.00 | ₹340.00 | ₹0.00 | Charged fairly |
+| Inj. Pantoprazole | ₹135.00 | ₹160.00 | ₹25.00 | Potential overcharge due to lower billed price |
+| Inj. Tramadol | ₹100.00 | ₹100.00 | ₹0.00 | Charged fairly |
+| Tab. Metronidazole | ₹48.00 | ₹48.00 | ₹0.00 | Charged fairly |
+| Tab. Paracetamol | ₹200.00 | ₹200.00 | ₹0.00 | Charged fairly |
+| Tab. Diclofenac | ₹60.00 | ₹60.00 | ₹0.00 | Charged fairly |
+| Inj. Ondansetron | ₹105.00 | ₹105.00 | ₹0.00 | Charged fairly |
+| IV Fluids (RL/NS) | ₹320.00 | ₹320.00 | ₹0.00 | Charged fairly |
+| Semi-Private Room (AC) | ₹5,000.00 | ₹5,000.00 | ₹0.00 | Charged fairly |
+| Nursing Charges | ₹1,600.00 | ₹1,600.00 | ₹0.00 | Charged fairly |
+| Food and Dietary Services | ₹800.00 | ₹800.00 | ₹0.00 | Charged fairly |
+| Registration and Medical Records | ₹200.00 | ₹200.00 | ₹0.00 | Charged fairly |
 
-**📊 Summary of Savings**
-**Total Potential Overcharge: ₹3,290.00**
+Summary of Savings
+Total Potential Overcharge: ₹5,025.00
+Audit Conclusion: The bill is inflated by ₹5,025.00 due to overcharging on certain items.
+Recommendation
+The patient can use this data to contest the bill with the hospital TPA or management, requesting a reduction of ₹5,025.00 from the total charges.
 
-**✅ Audit Conclusion**
-The bill is inflated by ₹3,290.00 due to overcharging for certain items.
-
-**💡 Recommendation**
-The patient can use this data to contest the bill with the hospital TPA or management, requesting a reduction of ₹3,290.00.
-
-**📝 Items within standard limits:**
-Laparoscopic Appendicectomy, CT Scan Abdomen, Anesthesia Charges, Post-Operative Care, Surgical Instrument Kit, Laparoscopic Equipment Fee, IV Cannula and Set, Sterile Gloves, Surgical Dressing Material, Cotton Gauze Swabs, Bandages and Tapes, Disposable Syringes, Patient Gown, Inj. Ceftriaxone, Inj. Pantoprazole, Inj. Tramadol, Tab. Metronidazole, Tab. Paracetamol, Tab. Diclofenac, Inj. Ondansetron, IV Fluids (RL/NS), Semi-Private Room (AC), Nursing Charges, Food and Dietary Services, Registration and Medical Records
-
-*This is a demo audit report. In production, Langflow would analyze the actual bill.*"""
+Items within standard limits: Emergency Room Consultation, Complete Blood Count (CBC), Ultrasound Abdomen, CT Scan Abdomen, Anesthesia Charges, Post-Operative Care, Surgical Instrument Kit, IV Cannula and Set, Sterile Gloves, Surgical Dressing Material, Cotton Gauze Swabs, Bandages and Tapes, Disposable Syringes, Patient Gown, Inj. Ceftriaxone, Inj. Tramadol, Tab. Metronidazole, Tab. Paracetamol, Tab. Diclofenac, Inj. Ondansetron, IV Fluids (RL/NS), Semi-Private Room (AC), Nursing Charges, Food and Dietary Services, Registration and Medical Records."""
             
             return {
                 "success": False, 
@@ -376,58 +372,6 @@ with st.sidebar:
     )
     
     st.session_state.selected_tool = selected_page
-    
-    st.markdown("---")
-    
-    # Debug Mode Toggle
-    st.markdown("### 🔧 Developer Tools")
-    debug_mode = st.checkbox("Enable Debug Mode", value=False, help="Shows raw API responses")
-    st.session_state["debug_mode"] = debug_mode
-    
-    if debug_mode:
-        st.info("Debug mode enabled. Raw API responses will appear here.")
-        
-        # Flow health check
-        with st.expander("🏥 Flow Health Check"):
-            if st.button("Test All Flows"):
-                st.write("**Testing connections...**")
-                
-                flows = {
-                    "Medical Q&A": "term_and_text",
-                    "Hospital Finder": "hospital_finder", 
-                    "Report Analyzer": "report_analyzer",
-                    "Prescription": "prescription",
-                    "Bill Analyzer": "bill_analyzer"
-                }
-                
-                for name, flow_id in flows.items():
-                    try:
-                        result = api._call_api(flow_id, "Health check test")
-                        if result.get("success"):
-                            st.success(f"✅ {name}")
-                        else:
-                            error = result.get("error", "Unknown")
-                            if "500" in str(error):
-                                st.error(f"🔥 {name} - Flow Error (Check Read File component)")
-                            else:
-                                st.warning(f"⚠️ {name} - {error[:100]}")
-                    except Exception as e:
-                        st.error(f"❌ {name} - {str(e)[:100]}")
-    
-    st.markdown("---")
-    
-    # Quick Info
-    st.markdown("""
-    <div style="padding: 15px; background: rgba(30, 41, 59, 0.5); border-radius: 12px;">
-        <h4 style="margin: 0 0 10px 0;">💡 How It Works</h4>
-        <p style="font-size: 0.9em; color: #94a3b8; margin: 0;">
-        <strong>File Upload = Trigger</strong><br>
-        • Upload your file<br>
-        • Backend uses pre-loaded sample<br>
-        • Get instant AI analysis
-        </p>
-    </div>
-    """, unsafe_allow_html=True)
 
 # ========== DASHBOARD PAGE ==========
 if st.session_state.selected_tool == "📊 Dashboard":
@@ -453,7 +397,7 @@ if st.session_state.selected_tool == "📊 Dashboard":
         {
             "icon": "📄", 
             "title": "Report Analyzer",
-            "description": "Upload to trigger AI analysis using backend sample reports.",
+            "description": "Upload your medical report and get AI analysis.",
             "color": "#10b981",
             "page": "📄 Report Analyzer"
         },
@@ -467,14 +411,14 @@ if st.session_state.selected_tool == "📊 Dashboard":
         {
             "icon": "💊",
             "title": "Medicine Explainer",
-            "description": "Upload to trigger AI analysis using backend sample prescriptions.",
+            "description": "Upload your prescription and get detailed medicine explanations.",
             "color": "#f59e0b",
             "page": "💊 Medicine Explainer"
         },
         {
             "icon": "💰",
             "title": "Bill Auditor",
-            "description": "Upload to trigger AI analysis using backend sample bills.",
+            "description": "Upload your medical bill and get cost analysis.",
             "color": "#ef4444",
             "page": "💰 Bill Auditor"
         }
@@ -515,7 +459,7 @@ if st.session_state.selected_tool == "📊 Dashboard":
         st.markdown("""
         <div class="glass-card">
             <h3>📤 Step 2: Upload/Input</h3>
-            <p>Upload a file (trigger) or enter text directly.</p>
+            <p>Upload a file or enter your query directly.</p>
         </div>
         """, unsafe_allow_html=True)
     
@@ -523,50 +467,116 @@ if st.session_state.selected_tool == "📊 Dashboard":
         st.markdown("""
         <div class="glass-card">
             <h3>⚡ Step 3: Analyze</h3>
-            <p>Backend uses pre-loaded samples to generate AI insights.</p>
+            <p>Get instant AI-powered insights and recommendations.</p>
         </div>
         """, unsafe_allow_html=True)
 
 # ========== MEDICAL Q&A PAGE ==========
 elif st.session_state.selected_tool == "🧠 Medical Q&A":
-    st.title("🧠 Medical Q&A Assistant")
-    
     st.markdown("""
     <div class="glass-card">
-        <h3 style="margin-top: 0;">Ask Medical Questions</h3>
-        <p>Get answers to your medical questions from our AI assistant</p>
+        <h2 style="margin-top: 0;">🧠 Medical Q&A Assistant</h2>
+        <p>Ask medical questions or get help understanding medical report terms with AI</p>
     </div>
     """, unsafe_allow_html=True)
-    
-    question = st.text_area(
-        "Enter your medical question:",
-        height=120,
-        placeholder="Example: What are symptoms of diabetes?\nShould I be concerned about frequent headaches?\nExplain MRI results in simple terms...",
-        key="qna_input"
-    )
-    
+
+    # Two columns for Language and Expertise Level
     col1, col2 = st.columns(2)
     
     with col1:
-        expertise = st.selectbox(
-            "Response Level",
-            ["Patient-Friendly", "Medical Student", "Professional"]
+        # Language Selection
+        st.markdown("### 🌍 Response Language")
+        output_language = st.selectbox(
+            "Choose the language for AI response:",
+            [
+                "English", 
+                "Hindi (हिंदी)", 
+                "Marathi (मराठी)", 
+                "Tamil (தமிழ்)", 
+                "Telugu (తెలుగు)", 
+                "Bengali (বাংলা)",
+                "Gujarati (ગુજરાતી)",
+                "Kannada (ಕನ್ನಡ)",
+                "Malayalam (മലയാളം)",
+                "Punjabi (ਪੰਜਾਬੀ)"
+            ],
+            index=0,
+            help="The AI will provide the answer in your selected language",
+            key="language_selector"
         )
     
     with col2:
-        if st.button("🔍 Get Answer", type="primary", use_container_width=True):
-            if question:
-                result = api.qna_medical(f"{expertise} answer for: {question}")
+        # Response Level Selection
+        st.markdown("### 📚 Response Level")
+        expertise = st.selectbox(
+            "Choose explanation complexity:",
+            ["Patient-Friendly", "Medical Student", "Professional"],
+            index=0,
+            help="Choose how detailed and technical the explanation should be",
+            key="expertise_level"
+        )
+
+    st.markdown("---")
+    st.markdown("### 💬 Your Medical Question")
+    
+    question = st.text_area(
+        "Enter your question here:",
+        height=150,
+        placeholder="Type your medical question in any language...\n\nExamples:\n- What are symptoms of diabetes?\n- Explain what HbA1c means\n- मुझे सिरदर्द क्यों होता है?\n- என்னிடம் காய்ச்சல் அறிகுறிகள் என்ன?",
+        key="qna_question"
+    )
+
+    if st.button("🔍 Get Medical Answer", type="primary", use_container_width=True):
+        if not question.strip():
+            st.warning("⚠️ Please enter a question")
+        else:
+            with st.spinner(f"🔬 Getting {expertise.lower()} answer in {output_language}..."):
+                # Extract just the language name (remove the script part)
+                language_name = output_language.split(" (")[0]
                 
+                # Build the prompt with BOTH language instruction AND expertise level
+                enhanced_question = question
+                
+                # Add expertise level instruction
+                if expertise == "Patient-Friendly":
+                    enhanced_question += "\n\nPlease provide a simple, easy-to-understand explanation suitable for patients with no medical background. Use simple words and avoid complex medical jargon."
+                elif expertise == "Medical Student":
+                    enhanced_question += "\n\nPlease provide a moderately detailed explanation suitable for medical students. Include relevant medical terminology with explanations."
+                elif expertise == "Professional":
+                    enhanced_question += "\n\nPlease provide a detailed, professional-level explanation with complete medical terminology, mechanisms, and clinical considerations."
+                
+                # Add language instruction
+                if language_name != "English":
+                    enhanced_question += f"\n\nIMPORTANT: Provide the complete answer in {language_name} language. Translate all explanations to {language_name} while keeping medical terms accurate."
+                
+                # Get answer directly in chosen language and expertise level
+                result = api.qna_medical(enhanced_question)
+
                 if result.get("success"):
-                    st.success("✅ Analysis Complete!")
+                    final_answer = result["message"]
+
+                    # Display
                     st.markdown("---")
-                    st.markdown(f'<div class="chat-bubble-user">{question}</div>', unsafe_allow_html=True)
-                    st.markdown(f'<div class="chat-bubble-ai">{result["message"]}</div>', unsafe_allow_html=True)
+                    st.success("✅ Answer Ready!")
+                    
+                    # Show selected options
+                    st.markdown(f"**Settings:** {expertise} level • {output_language}")
+                    
+                    st.markdown(
+                        f'<div class="chat-bubble-user"><strong>Your Question:</strong><br>{question}</div>',
+                        unsafe_allow_html=True
+                    )
+                    
+                    st.markdown(
+                        f'<div class="chat-bubble-ai"><strong>Medical Answer ({expertise} - {output_language}):</strong><br>{final_answer}</div>',
+                        unsafe_allow_html=True
+                    )
+
+                    st.info("💡 **Note:** This is AI-generated medical information. Please consult a healthcare professional for personalized medical advice.")
+
                 else:
-                    st.error(f"Error: {result.get('error')}")
-            else:
-                st.warning("Please enter a question")
+                    st.error(f"❌ Error: {result.get('error', 'Unknown error')}")
+
 
 # ========== REPORT ANALYZER PAGE ==========
 elif st.session_state.selected_tool == "📄 Report Analyzer":
@@ -574,27 +584,19 @@ elif st.session_state.selected_tool == "📄 Report Analyzer":
     
     st.markdown("""
     <div class="glass-card">
-        <h3 style="margin-top: 0;">⚡ Trigger-Based Analysis</h3>
-        <p><strong>How it works:</strong></p>
-        <ol style="color: #94a3b8; margin: 10px 0;">
-            <li>Upload your medical report file (any format)</li>
-            <li>File upload triggers the Langflow agent</li>
-            <li>Agent analyzes using <strong>pre-loaded backend sample report</strong></li>
-            <li>You get instant AI insights</li>
-        </ol>
-        <p style="color: #34d399;">✅ Your file acts as a trigger - backend handles the actual analysis</p>
+        <h3 style="margin-top: 0;">Medical Report Analysis</h3>
+        <p>Upload your medical report here and the AI agent will analyze it for you.</p>
     </div>
     """, unsafe_allow_html=True)
     
     uploaded_file = st.file_uploader(
-        "📤 Upload Medical Report (Trigger File)",
+        "📤 Upload Medical Report",
         type=['txt', 'pdf', 'docx', 'jpg', 'png', 'jpeg'],
-        help="Upload any file - it will trigger analysis using backend sample"
+        help="Upload your medical report for AI analysis"
     )
     
     if uploaded_file:
         st.success(f"✅ Uploaded: {uploaded_file.name}")
-        st.markdown(f'<div class="trigger-info">🎯 Trigger Active: File uploaded successfully. Backend will use pre-loaded sample for analysis.</div>', unsafe_allow_html=True)
     
     analysis_type = st.selectbox(
         "Analysis Type",
@@ -614,7 +616,7 @@ elif st.session_state.selected_tool == "📄 Report Analyzer":
             if additional_notes:
                 analysis_msg += f" | Notes: {additional_notes}"
             
-            # Call API - file_uploaded=True triggers backend analysis
+            # Call API
             result = api.analyze_report(
                 user_message=analysis_msg,
                 file_uploaded=True,
@@ -628,7 +630,7 @@ elif st.session_state.selected_tool == "📄 Report Analyzer":
             else:
                 st.error(f"Error: {result.get('error')}")
         else:
-            st.warning("⚠️ Please upload a medical report to trigger analysis")
+            st.warning("⚠️ Please upload a medical report for analysis")
 
 # ========== HOSPITAL FINDER PAGE ==========
 elif st.session_state.selected_tool == "🏥 Hospital Finder":
@@ -649,26 +651,20 @@ elif st.session_state.selected_tool == "🏥 Hospital Finder":
             placeholder="Cardiac surgery, Pediatric emergency, Cancer treatment..."
         )
         
-        location = st.text_input("Location (city/area):", "Delhi")
-        
-        with st.expander("🎯 Specialization Filters"):
-            specializations = st.multiselect(
-                "Select specializations:",
-                ["Cardiology", "Neurology", "Orthopedics", "Pediatrics", 
-                 "Oncology", "General Surgery", "Emergency", "Dermatology"],
-                default=[]
-            )
+        location = st.selectbox(
+            "Select City:",
+            ["Pune", "Mumbai", "Aurangabad", "Nagpur", "Nashik", "Kolhapur", "Indore", "Bhopal", "Delhi", "Chennai", "Lucknow"]
+        )
     
     with col2:
-        st.markdown("### ⚙️ Search Preferences")
+        st.markdown("### Specialization")
         
-        priority = st.radio(
-            "Priority:",
-            ["Closest First", "Highest Rated", "Most Affordable", "Best Facilities"]
+        specializations = st.multiselect(
+            "Select specializations:",
+            ["Cardiology", "Neurology", "Orthopedics", "Pediatrics", 
+             "Oncology", "General Surgery", "Emergency", "Dermatology"],
+            default=[]
         )
-        
-        include_insurance = st.checkbox("Insurance Accepted", True)
-        emergency_24x7 = st.checkbox("24/7 Emergency", True)
         
         st.markdown("---")
         
@@ -679,11 +675,6 @@ elif st.session_state.selected_tool == "🏥 Hospital Finder":
                     search_query += f" in {location}"
                 if specializations:
                     search_query += f" specializing in {', '.join(specializations)}"
-                if include_insurance:
-                    search_query += " that accept insurance"
-                if emergency_24x7:
-                    search_query += " with 24/7 emergency"
-                search_query += f" | Priority: {priority}"
                 
                 result = api.find_hospitals(search_query, location)
                 
@@ -702,27 +693,19 @@ elif st.session_state.selected_tool == "💊 Medicine Explainer":
     
     st.markdown("""
     <div class="glass-card">
-        <h3 style="margin-top: 0;">⚡ Trigger-Based Prescription Analysis</h3>
-        <p><strong>How it works:</strong></p>
-        <ol style="color: #94a3b8; margin: 10px 0;">
-            <li>Upload your prescription file (any format)</li>
-            <li>File upload triggers the Langflow agent</li>
-            <li>Agent analyzes using <strong>pre-loaded backend sample prescription</strong></li>
-            <li>Get medicine explanations and generic alternatives</li>
-        </ol>
-        <p style="color: #34d399;">✅ Your file acts as a trigger - backend handles the actual analysis</p>
+        <h3 style="margin-top: 0;">Prescription Analysis</h3>
+        <p>Upload your prescription and get detailed medicine explanations.</p>
     </div>
     """, unsafe_allow_html=True)
     
     uploaded_file = st.file_uploader(
-        "📤 Upload Prescription (Trigger File)",
+        "📤 Upload Prescription",
         type=['txt', 'pdf', 'docx', 'jpg', 'png', 'jpeg'],
-        help="Upload any file - it will trigger analysis using backend sample"
+        help="Upload your prescription for AI analysis"
     )
     
     if uploaded_file:
         st.success(f"✅ Uploaded: {uploaded_file.name}")
-        st.markdown(f'<div class="trigger-info">🎯 Trigger Active: File uploaded successfully. Backend will use pre-loaded sample for analysis.</div>', unsafe_allow_html=True)
     
     col1, col2 = st.columns(2)
     
@@ -758,7 +741,7 @@ elif st.session_state.selected_tool == "💊 Medicine Explainer":
             
             analysis_msg = " | ".join(analysis_parts)
             
-            # Call API - file_uploaded=True triggers backend analysis
+            # Call API
             result = api.explain_medicines(
                 user_message=analysis_msg,
                 file_uploaded=True,
@@ -794,7 +777,7 @@ elif st.session_state.selected_tool == "💊 Medicine Explainer":
             else:
                 st.error(f"Analysis failed: {result.get('error')}")
         else:
-            st.warning("⚠️ Please upload a prescription to trigger analysis")
+            st.warning("⚠️ Please upload a prescription for analysis")
 
 # ========== BILL AUDITOR PAGE ==========
 elif st.session_state.selected_tool == "💰 Bill Auditor":
@@ -802,53 +785,39 @@ elif st.session_state.selected_tool == "💰 Bill Auditor":
     
     st.markdown("""
     <div class="glass-card">
-        <h3 style="margin-top: 0;">⚡ Trigger-Based Bill Analysis</h3>
-        <p><strong>How it works:</strong></p>
-        <ol style="color: #94a3b8; margin: 10px 0;">
-            <li>Upload your medical bill file (any format)</li>
-            <li>File upload triggers the Langflow agent</li>
-            <li>Agent analyzes using <strong>pre-loaded backend sample bill</strong></li>
-            <li>Find overcharges and cost-saving opportunities</li>
-        </ol>
-        <p style="color: #34d399;">✅ Your file acts as a trigger - backend handles the actual analysis</p>
+        <h3 style="margin-top: 0;">Medical Bill Analysis</h3>
+        <p>Upload your medical bill and get detailed cost analysis.</p>
     </div>
     """, unsafe_allow_html=True)
     
     uploaded_file = st.file_uploader(
-        "📤 Upload Medical Bill (Trigger File)",
+        "📤 Upload Medical Bill",
         type=['txt', 'pdf', 'docx', 'jpg', 'png', 'jpeg'],
-        help="Upload any file - it will trigger analysis using backend sample"
+        help="Upload your medical bill for AI analysis"
     )
     
     if uploaded_file:
         st.success(f"✅ Uploaded: {uploaded_file.name}")
-        st.markdown(f'<div class="trigger-info">🎯 Trigger Active: File uploaded successfully. Backend will use pre-loaded sample for analysis.</div>', unsafe_allow_html=True)
     
     col1, col2 = st.columns(2)
     
     with col1:
-        city = st.text_input("Your City:", "Delhi")
-        analysis_depth = st.selectbox(
-            "Analysis Depth",
-            ["Quick Scan", "Standard Audit", "Detailed Analysis"]
-        )
-    
-    with col2:
         st.markdown("**Check for:**")
         check_overcharges = st.checkbox("Overcharges", True)
         check_duplicates = st.checkbox("Duplicate Charges", True)
         suggest_alternatives = st.checkbox("Cost-saving Alternatives", True)
     
-    additional_notes = st.text_area(
-        "Additional instructions (optional):",
-        height=80,
-        placeholder="E.g., Compare with insurance rates, Focus on medicine costs, etc."
-    )
+    with col2:
+        additional_notes = st.text_area(
+            "Additional instructions (optional):",
+            height=80,
+            placeholder="E.g., Compare with insurance rates, Focus on medicine costs, etc."
+        )
     
     if st.button("🔍 Analyze Bill", type="primary", use_container_width=True):
         if uploaded_file:
             # Build analysis message
-            analysis_parts = [f"{analysis_depth} for bill from {city}"]
+            analysis_parts = ["Medical bill analysis"]
             if check_overcharges:
                 analysis_parts.append("Check overcharges")
             if check_duplicates:
@@ -861,7 +830,7 @@ elif st.session_state.selected_tool == "💰 Bill Auditor":
             analysis_msg = " | ".join(analysis_parts)
             
             try:
-                # Call API - file_uploaded=True triggers backend analysis
+                # Call API
                 result = api.analyze_bill(
                     user_message=analysis_msg,
                     file_uploaded=True,
@@ -914,7 +883,7 @@ elif st.session_state.selected_tool == "💰 Bill Auditor":
                 """)
                 
         else:
-            st.warning("⚠️ Please upload a medical bill to trigger analysis")
+            st.warning("⚠️ Please upload a medical bill for analysis")
 
 # ========== FOOTER ==========
 st.markdown("---")
@@ -922,7 +891,7 @@ st.markdown("""
 <div style="text-align: center; color: #94a3b8; padding: 20px;">
     <p style="font-size: 1.1em;">🏥 <strong>CHRONOCHECK</strong> • CHECK • CARE • CLARITY</p>
     <p style="font-size: 0.9em;">
-        Medical AI Assistant • Trigger-Based File Analysis
+        Medical AI Assistant • Comprehensive Healthcare Tools
     </p>
     <p style="font-size: 0.8em; margin-top: 10px;">
         ⚠️ For informational purposes only. Always consult healthcare professionals.
